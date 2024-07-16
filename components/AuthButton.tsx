@@ -1,10 +1,11 @@
+// components/AuthButton.tsx
 import React from "react";
-import Link from "next/link";
+import { signIn } from "next-auth/react";
 import { FaFacebook, FaApple } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa6";
 
 interface AuthButtonProps {
-  provider: string;
+  provider: "google" | "facebook" | "apple";
 }
 
 const AuthButton: React.FC<AuthButtonProps> = ({ provider }) => {
@@ -12,7 +13,7 @@ const AuthButton: React.FC<AuthButtonProps> = ({ provider }) => {
     return "w-full py-2 mb-4 flex items-center justify-center rounded-md hover:bg-gray-200 text-center ";
   };
 
-  const getIcon = (provider: string) => {
+  const getIcon = (provider: AuthButtonProps["provider"]) => {
     switch (provider) {
       case "google":
         return <FaGoogle className="inline-block mr-2 text-red-600" />;
@@ -25,7 +26,7 @@ const AuthButton: React.FC<AuthButtonProps> = ({ provider }) => {
     }
   };
 
-  const getButtonText = (provider: string) => {
+  const getButtonText = (provider: AuthButtonProps["provider"]) => {
     switch (provider) {
       case "google":
         return <>{getIcon(provider)} Continue with Google</>;
@@ -39,13 +40,12 @@ const AuthButton: React.FC<AuthButtonProps> = ({ provider }) => {
   };
 
   return (
-    <Link href={`/api/auth/${provider}`} legacyBehavior>
-      <a
-        className={`${getButtonClasses()} text-black bg-gray-100 hover:bg-gray-200 `}
-      >
-        {getButtonText(provider)}
-      </a>
-    </Link>
+    <button
+      onClick={() => signIn(provider)}
+      className={`${getButtonClasses()} text-black bg-gray-100 hover:bg-gray-200 `}
+    >
+      {getButtonText(provider)}
+    </button>
   );
 };
 
