@@ -1,4 +1,3 @@
-// components/AuthButton.tsx
 import React from "react";
 import { signIn } from "next-auth/react";
 import { FaFacebook, FaApple } from "react-icons/fa";

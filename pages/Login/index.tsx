@@ -18,9 +18,9 @@ const Login: React.FC = () => {
             Login To Realtime Tracker
           </h2>
           {/* authentication buttons */}
-          <AuthButton provider="Google" />
+          <AuthButton provider="google" />
           <AuthButton provider="facebook" />
-          <AuthButton provider="Apple" />
+          <AuthButton provider="apple" />
           {/* Render the login form */}
           <LoginForm />
         </div>
