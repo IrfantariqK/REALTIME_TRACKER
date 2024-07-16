@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
 import React from "react";
-import Signupform from "./signupform";
+import SignupForm from "./signupform";
 import AuthButton from "@/components/AuthButton";
 import Head from "next/head";
 import Video from "@/components/Video";
 
-const signup: React.FC = () => {
+const Signup: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white-100">
       <Head>
@@ -19,11 +19,11 @@ const signup: React.FC = () => {
             Create an Account
           </h2>
           {/* Social authentication buttons */}
-          <AuthButton provider="Google" />
-          <AuthButton provider="Facebook" />
-          <AuthButton provider="Apple" />
+          <AuthButton provider="google" />
+          <AuthButton provider="facebook" />
+          <AuthButton provider="apple" />
           {/* Render the registration form */}
-          <Signupform />
+          <SignupForm />
         </div>
       </div>
 
@@ -35,4 +35,4 @@ const signup: React.FC = () => {
   );
 };
 
-export default signup;
+export default Signup;
