@@ -1,6 +1,6 @@
-/* eslint-disable react/no-unescaped-entities */
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import Link from "next/link"; // Import Link from Next.js
+import Link from "next/link";
+import { useRouter } from "next/router";
 import InputField from "@/components/InputField";
 import ErrorAlert from "@/components/ErrorAlert";
 import TogglePassword from "@/components/TogglePassword";
@@ -11,6 +11,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
+  const router = useRouter();
 
   const validateEmail = (email: string): boolean => {
     if (!email) {
@@ -41,16 +42,34 @@ const LoginForm = () => {
     setPassword(e.target.value);
   };
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const isEmailValid: boolean = validateEmail(email);
     const isPasswordValid: boolean = validatePassword(password);
 
     if (isEmailValid && isPasswordValid) {
-      console.log("Email:", email);
-      console.log("Password:", password);
-      // Example: Call your login API or perform authentication logic
+      try {
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data.message);
+          // Redirect to the home page after successful login
+          router.push("/Home");
+        } else {
+          const errorData = await response.json();
+          console.error(errorData.message); // Handle error response
+        }
+      } catch (error) {
+        console.error("An unexpected error occurred:", error);
+      }
     }
   };
 
@@ -66,8 +85,7 @@ const LoginForm = () => {
         {emailError && <ErrorAlert message={emailError} />}
         <TogglePassword value={password} onChange={handlePasswordChange} />
         {passwordError && <ErrorAlert message={passwordError} />}
-        <Button type="submit">Log in</Button>{" "}
-        {/* Use type="submit" to trigger form submission */}
+        <Button type="submit">Log in</Button>
       </form>
       <div className="text-left mt-4">
         <Link href="/Forget_password" legacyBehavior>
@@ -80,7 +98,6 @@ const LoginForm = () => {
           <Link href="/Signup" legacyBehavior>
             <a className="text-blue-500 hover:underline">Sign up</a>
           </Link>
-        
         </p>
       </div>
     </div>

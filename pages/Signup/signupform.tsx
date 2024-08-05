@@ -1,12 +1,11 @@
-/* eslint-disable react/no-unescaped-entities */
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import Button from "@/components/Button";
-import InputField from "@/components/InputField"; 
-import TogglePassword from "@/components/TogglePassword"; 
-import ErrorAlert from "@/components/ErrorAlert"; 
+import InputField from "@/components/InputField";
+import TogglePassword from "@/components/TogglePassword";
+import ErrorAlert from "@/components/ErrorAlert";
 import Link from "next/link";
 
-const Signupform = () => {
+const SignupForm = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
@@ -41,16 +40,32 @@ const Signupform = () => {
     setPassword(e.target.value);
   };
 
-  const handleRegistration = (e: FormEvent<HTMLFormElement>) => {
+  const handleRegistration = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const isEmailValid: boolean = validateEmail(email);
     const isPasswordValid: boolean = validatePassword(password);
 
     if (isEmailValid && isPasswordValid) {
-      console.log("Email:", email);
-      console.log("Password:", password);
-      // Example: Call your registration API or perform registration logic
+      try {
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data.message); // Handle success response (e.g., redirect)
+        } else {
+          const errorData = await response.json();
+          console.error(errorData.message); // Handle error response
+        }
+      } catch (error) {
+        console.error("An unexpected error occurred:", error);
+      }
     }
   };
 
@@ -67,11 +82,10 @@ const Signupform = () => {
         <TogglePassword value={password} onChange={handlePasswordChange} />
         {passwordError && <ErrorAlert message={passwordError} />}
         <Button type="submit">Sign up</Button>{" "}
-        {/* Use type="submit" to trigger form submission */}
       </form>
       <div className="text-center mt-4 animate-bounce">
         <p className="text-sm">
-          Already account?{" "}
+          Already have an account?{" "}
           <Link href="/" legacyBehavior>
             <a className="text-blue-500 hover:underline">Login</a>
           </Link>
@@ -81,4 +95,4 @@ const Signupform = () => {
   );
 };
 
-export default Signupform;
+export default SignupForm;

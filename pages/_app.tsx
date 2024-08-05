@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       .find((row) => row.startsWith("auth-token="));
 
     // Define the routes where you want to redirect if token is not present
-    const protectedRoutes = ["/", "/Signup", "/Forget_password"];
+    const protectedRoutes = ["/Home", "/Signup", "/Forget_password"];
 
     // Check if token is not present and current route is not a protected route
     if (!token && !protectedRoutes.includes(router.pathname)) {
